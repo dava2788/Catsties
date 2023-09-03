@@ -3,6 +3,8 @@ using AuctionService.DTOs;
 using AuctionService.Entities;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Contracts;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,11 +16,13 @@ public class AuctionsController : ControllerBase
 {
     private readonly AuctionDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public AuctionsController(AuctionDbContext context,IMapper mapper)
+    public AuctionsController(AuctionDbContext context,IMapper mapper,IPublishEndpoint publishEndpoint)
     {
         _context = context;
         _mapper = mapper;
+        _publishEndpoint = publishEndpoint;
     }
 
     [HttpGet]
@@ -55,7 +59,13 @@ public class AuctionsController : ControllerBase
         // TODO: add current user as seller
         auction.Seller = "test";
 
+        //After the changes and add massaging all of this 3 transaction will 
+        //all work or none them will work 
         _context.Auctions.Add(auction);
+        var newAuction = _mapper.Map<AuctionDto>(auction);
+        //because this is before SaveChangesAsync this will use EF
+        //will be use the same transcation
+        await _publishEndpoint.Publish(_mapper.Map<AuctionCreated>(newAuction));
 
         var result = await _context.SaveChangesAsync() > 0;
 
@@ -65,7 +75,7 @@ public class AuctionsController : ControllerBase
         //the order 2 parameters are the expected object need it and return object
         return CreatedAtAction(
             nameof(GetAuctionById), 
-            new {auction.Id}, _mapper.Map<AuctionDto>(auction)
+            new {auction.Id}, newAuction
         );
     }
 
@@ -86,7 +96,8 @@ public class AuctionsController : ControllerBase
         auction.Item.Year = updateAuctionDto.Year ?? auction.Item.Year;
 
         _context.Auctions.Update(auction);
-
+        
+        await _publishEndpoint.Publish(_mapper.Map<AuctionUpdated>(auction));
 
         var result = await _context.SaveChangesAsync() > 0;
 
@@ -105,6 +116,8 @@ public class AuctionsController : ControllerBase
         // TODO: check seller == username
 
         _context.Auctions.Remove(auction);
+
+        await _publishEndpoint.Publish<AuctionDeleted>(new { Id = auction.Id.ToString() });
 
         var result = await _context.SaveChangesAsync() > 0;
 

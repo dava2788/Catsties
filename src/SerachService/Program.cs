@@ -1,4 +1,5 @@
 using System.Net;
+using MassTransit;
 using Polly;
 using Polly.Extensions.Http;
 using SerachService;
@@ -9,8 +10,30 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHttpClient<AuctionSvcHttpClient>().AddPolicyHandler(GetPolicy());
 
+builder.Services.AddMassTransit(x=>
+{
+    //With this approach all the consumers 
+    //within the same namespace will be added
+    x.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
+
+    //this will add a prefix to all the consumers
+    x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search",false));
+
+    x.UsingRabbitMq((context,config)=>
+    {
+        //configure for the search-auction endpoint
+        config.ReceiveEndpoint("search-auction-created", e => 
+        {
+            //will do 5 times and wait 5 second
+            e.UseMessageRetry(r => r.Interval(5, 5));
+            e.ConfigureConsumer<AuctionCreatedConsumer>(context);
+        });
+        config.ConfigureEndpoints(context);
+    });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
