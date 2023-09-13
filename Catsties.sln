@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerachService", "src\Serach
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "src\Contracts\Contracts.csproj", "{475562EA-6DD6-4050-855E-68B6454FBB14}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "src\IdentityService\IdentityService.csproj", "{50735CD8-9078-40DB-928C-C82E11BACD60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{475562EA-6DD6-4050-855E-68B6454FBB14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{475562EA-6DD6-4050-855E-68B6454FBB14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{475562EA-6DD6-4050-855E-68B6454FBB14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50735CD8-9078-40DB-928C-C82E11BACD60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50735CD8-9078-40DB-928C-C82E11BACD60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50735CD8-9078-40DB-928C-C82E11BACD60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50735CD8-9078-40DB-928C-C82E11BACD60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -40,5 +46,6 @@ Global
 		{12E8E822-0381-446C-84F7-287A9CC9CFD8} = {70134091-666F-475A-9009-717B9AD78476}
 		{A29DE158-F1F9-424B-AFFA-AA360BF83B06} = {70134091-666F-475A-9009-717B9AD78476}
 		{475562EA-6DD6-4050-855E-68B6454FBB14} = {70134091-666F-475A-9009-717B9AD78476}
+		{50735CD8-9078-40DB-928C-C82E11BACD60} = {70134091-666F-475A-9009-717B9AD78476}
 	EndGlobalSection
 EndGlobal
