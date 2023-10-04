@@ -48,6 +48,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters.NameClaimType = "username";
     });
 
+builder.Services.AddScoped<IAuctionRepository,AuctionRepository>();
+
 var app = builder.Build();
 //UseAuthentication alway first then UseAuthorization
 app.UseAuthentication();
@@ -65,3 +67,5 @@ catch (Exception ex)
 }
 
 app.Run();
+
+public partial class Program{}
