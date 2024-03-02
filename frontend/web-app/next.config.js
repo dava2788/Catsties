@@ -7,6 +7,11 @@ const nextConfig = {
         domains:[
             'cdn.pixabay.com'
         ]
+    },
+    logging: {
+        fetches: {
+            fullUrl: true,
+        },
     }
 }
 
