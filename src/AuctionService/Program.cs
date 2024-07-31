@@ -49,6 +49,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddScoped<IAuctionRepository,AuctionRepository>();
+builder.Services.AddGrpc();
 
 var app = builder.Build();
 //UseAuthentication alway first then UseAuthorization
@@ -56,6 +57,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGrpcService<GrpcAuctionService>();
+
 try
 {
     DbInitializer.InitDb(app);
